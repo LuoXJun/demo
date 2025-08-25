@@ -1,0 +1,72 @@
+$primary: #409eff;
+$danger: #f56c6c;
+$warning: #e6a23c;
+$success: #67c23a;
+$info: #909399;
+$themeColor: #000;
+
+//
+$textLv1Color: #1e2945;
+$textLv2Color: #353a63;
+$textLv3Color: #757f96;
+$textNullCOlor: #aeadb0;
+$defaultColor: #0266f0;
+
+@mixin textLv1 {
+    color: $textLv1Color;
+    font-family: 'PingFang SC';
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+@mixin textLv2 {
+    color: $textLv2Color;
+    font-family: 'PingFang SC';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+@mixin textLv3 {
+    color: $textLv3Color;
+    font-family: 'PingFang SC';
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+@mixin textNull {
+    color: $textNullCOlor;
+    font-family: 'PingFang SC';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+p {
+    padding: 0;
+    margin: 0;
+}
+
+@font-face {
+    font-family: 'YouSheBiaoTiHei';
+    src: url('@/assets/font/YouSheBiaoTiHei-2.ttf');
+}
+
+@font-face {
+    font-family: 'PingFang SC';
+    src: url('@/assets/font/PingFangSC-Regular.woff2');
+}
+
+html,
+body,
+#app {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
