@@ -100,13 +100,20 @@
                 </el-form-item>
                 <el-form-item class="verifyCodeBox">
                     <el-input v-model="form.verifyCode" placeholder="请输入验证码"></el-input>
-                    <div class="verifyCode"></div>
+                    <div class="verifyCode">
+                        <getVerifyCode
+                            ref="refreshCodeRef"
+                            v-model="verifyCode"
+                            :content-width="165"
+                            :content-height="44"
+                        />
+                    </div>
                 </el-form-item>
                 <div class="operation">
                     <el-checkbox v-model="form.rememberAccount" label="记住账号" size="large" />
                     <span @click="currentType.setValue('change')">忘记密码？</span>
                 </div>
-                <el-button class="logBtn">登录</el-button>
+                <el-button class="logBtn" @click="login">登录</el-button>
                 <div class="regi">
                     <span>没有帐户？</span>
                     <span @click="currentType.setValue('regi')">立即注册</span>
@@ -119,11 +126,34 @@
 <script setup lang="ts">
 import { inject, ref } from 'vue';
 import { getType, getTypeDefault } from '@/utils/provide';
+import getVerifyCode from '@/components/getVerifyCode.vue';
+import { loginApi } from '@/api/login/login';
+import { ElMessage } from 'element-plus';
+import { useMenuStore } from '@/stores/useMenuStore';
+import { useRouter } from 'vue-router';
+const store = useMenuStore();
+const router = useRouter();
 
 const form = defineModel<Record<string, any>>({ default: {} });
 const currentType = inject(getType, getTypeDefault);
+const refreshCodeRef = ref();
 
 const isShowPassword = ref(false);
+const verifyCode = ref();
+
+const login = async () => {
+    if (String(form.value.verifyCode).toLowerCase() !== String(verifyCode.value).toLowerCase()) {
+        refreshCodeRef.value.refreshCode();
+        return ElMessage.error('验证错误');
+    }
+    try {
+        const { data } = await loginApi(form.value);
+        store.menu = data.data.routes;
+        sessionStorage.setItem('token', data.data.token);
+        router.push('/');
+    } finally {
+    }
+};
 </script>
 
 <style lang="scss">
@@ -139,7 +169,7 @@ const isShowPassword = ref(false);
     }
     .userInfo {
         .login-form {
-            margin-top: 54px;
+            margin-top: 40px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -186,7 +216,7 @@ const isShowPassword = ref(false);
                     .verifyCode {
                         width: 50%;
                         height: 44px;
-                        background-color: red;
+                        text-align: right;
                     }
                     .el-input {
                         width: 50%;
@@ -207,7 +237,7 @@ const isShowPassword = ref(false);
             .logBtn {
                 width: 376px;
                 height: 50px;
-                margin-top: 34px;
+                margin-top: 24px;
 
                 color: #fff;
                 font-family: 'PingFang SC';

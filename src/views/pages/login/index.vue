@@ -28,9 +28,10 @@
 import { onMounted, provide, ref } from 'vue';
 import loginComponent from './loginComponent/index.vue';
 import registerComponent from './registerComponent/index.vue';
-import { getType } from '@/utils/provide';
+import { getType } from '@/utils/provide.ts';
 const currentType = ref<TlogType>('login');
 const loginRef = ref();
+const form = ref<any>({ username: 'luo', password: 9527 });
 
 const componentDic = {
     login: loginComponent,
@@ -46,13 +47,21 @@ provide(getType, {
     }
 });
 
-const form = ref({});
+const resize = () => {
+    const body = document.body;
+    const h = body.clientHeight;
+    console.log(2);
+
+    loginRef.value.style.zoom = h / 1080;
+};
 
 onMounted(() => {
-    console.log(window.screen);
-    // const { availWidth, availHeight, width, height } = window.screen;
-    // loginRef.value.style.transform = `scale(${width / availWidth},${availHeight / height})`;
-    // loginRef.value.style.transformOrigin = 'center';
+    resize();
+    window.addEventListener('resize', resize);
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', resize);
 });
 </script>
 
@@ -61,7 +70,7 @@ onMounted(() => {
     height: 100%;
     width: 100%;
     background: url('@/assets/images/loginBg.png') no-repeat;
-    background-size: cover;
+    background-size: 100% 100%;
     position: relative;
     .logo {
         display: flex;

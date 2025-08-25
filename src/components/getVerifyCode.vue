@@ -9,7 +9,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted, withDefaults, defineProps } from 'vue';
+import { onMounted, withDefaults, defineProps } from 'vue';
 
 // 定义props类型
 interface CodeProps {
@@ -37,12 +37,8 @@ const props = withDefaults(defineProps<CodeProps>(), {
 });
 
 //验证码
-const verifyCode = ref('');
+const verifyCode = defineModel({ default: '2048' });
 
-onMounted(() => {
-    verifyCode.value = makeCode();
-    drawPic(verifyCode.value);
-});
 // 生成校验码
 const makeCode = (len = 4) => {
     let code = '';
@@ -59,10 +55,10 @@ const makeCode = (len = 4) => {
 // 重置验证码
 const refreshCode = () => {
     verifyCode.value = makeCode();
-    drawPic(verifyCode.value);
+    nextTick(() => {
+        drawPic(verifyCode.value);
+    });
 };
-// 定义暴露接口
-// defineExpose({ refreshCode });
 
 //随机数生成：根据角标拿字符串的值
 const randomNum = (min = 0, max: number) => Math.floor(Math.random() * (max - min)) + min;
@@ -151,4 +147,11 @@ function drawDot(ctx: CanvasRenderingContext2D, maxDot = 10) {
         ctx.fill();
     }
 }
+
+// 定义暴露接口
+defineExpose({ refreshCode });
+
+onMounted(() => {
+    refreshCode();
+});
 </script>
